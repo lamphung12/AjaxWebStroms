@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Hiện danh sách sản phẩm</h1>
+    <button onclick="findAll()">Hiện dữ liệu</button>
+    <button onclick="findAllOrderByPrice()">Hiện dữ liệu sắp xếp theo giá </button>
+    <button onclick="showCreateForm()">Thêm sản phẩm </button>
+
+ <div id="display"> </div>
+ 
+ <input type="text" id="one">
+ <input type="text" id="two">
+ <button onclick="findPriceBetween()">Search</button>
+
+    <script>
+        let show = document.getElementById("display");
+          let str ="";
+        function findAll(){
+          
+            $.ajax({
+            type:"GET",
+            url:"http://localhost:8081/products",
+            success :function(data){
+                display(data)
+            },error :function(data){
+                console.log(data)
+            }
+            })
+        }
+
+        function showCreateForm(){
+            let str =" <input type=\"text\" id=\"name\">\n"+
+            "<input type=\"text\" id=\"price\">\n"+
+            "<input type=\"text\" id=\"category\">\n"+
+            "<button onclick ='save()' >Thêm</button>";
+            show.innerHTML=str;
+        }
+        function save(){
+            let name = document.getElementById("name").value;
+            let price = document.getElementById("price").value;
+            let categoryId = document.getElementById("category").value;
+            let pro= {
+                name : name,
+                price : price,  
+                category : {
+                    id:categoryId
+
+                }          
+            }
+            $.ajax({
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            },
+            type: 'POST',
+            url: 'http://localhost:8081/products',
+            data: JSON.stringify(pro),
+            success:function (){
+                findAll();
+            },
+            error: function (error) {
+             console.log(error)
+            }
+            })
+
+        }
+        function findAllOrderByPrice(){
+            let str ="";
+            $.ajax({
+            type:"GET",
+            url:"http://localhost:8081/products/oder-by-price",
+            success :function(data){
+                console.log(data)
+                for(let i=0;i<data.length;i++){
+                    str+="<h1>"+data[i].name + "||"+ data[i].price+"<h1>";
+                }
+                show.innerHTML=str;
+            },error :function(data){
+                console.log(data)
+            }
+            })
+        }
+
+
+        function findPriceBetween(){
+            let str ="";
+            let one = document.getElementById("one").value;
+            let two = document.getElementById("two").value;
+            $.ajax({
+                
+            type:"GET",
+            url:"http://localhost:8081/products/price-between?one="+one+"&two="+two,
+            success :function(data){
+               display(data)
+            },error :function(data){
+                console.log(data)
+            }
+            })
+        }
+        
+        function display(data){
+            console.log(data)
+                for(let i=0;i<data.length;i++){
+                    str+="<h1>"+data[i].name + "||"+ data[i].price+"<h1>";
+                }
+                show.innerHTML=str;
+        }
+      
+
+
+    </script>
+</body>
+</html>
