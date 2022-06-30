@@ -5,38 +5,142 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 </head>
-<body>
-<h1>Hiện danh sách sản phẩm</h1>
-<div id="display"> </div>
-<button onclick="findAll()">ShowAll</button><br>
+<body onload="load()">
 
-<h2>Sắp xếp theo giá </h2>
-<button onclick="findAllOrderByPrice()">Hiện dữ liệu sắp xếp theo giá </button><br>
+<!--<button onclick="findAll()">ShowAll</button><br>-->
 
-<h2>Thêm sản phẩm</h2>
-<button onclick="showCreateForm()">Thêm sản phẩm </button><br>
 
-<button onclick="showTop4PriceMax()"> Top4</button><br>
+<!--<h2>Sắp xếp theo giá </h2>-->
+<!--<button onclick="findAllOrderByPrice()">Hiện dữ liệu sắp xếp theo giá </button><br>-->
 
-<h1>Tìm theo danh mục sản phẩm</h1>
-<input type="text" id="category">
-<button onclick="searchByCategory()">SearchByCategory</button>
+<!--<h2>Thêm sản phẩm</h2>-->
+<!--<button onclick="showCreateForm()">Thêm sản phẩm </button><br>-->
 
-<h1>Tìm theo khoảng giá</h1>
+<!--<button onclick="showTop4PriceMax()"> Top4</button><br>-->
 
-<input type="text" id="one">
-<input type="text" id="two">
-<button onclick="findPriceBetween()">Search</button><br>
+<!--<h1>Tìm theo danh mục sản phẩm</h1>-->
+<!--<input type="text" id="category">-->
+<!--<button onclick="searchByCategory()">SearchByCategory</button>-->
 
-<h1>Tìm kiếm sản phẩm theo tên </h1>
-<input type="text" id="name">
-<button onclick="searchByNameContaining()">SearchByName</button>
+<!--<h1>Tìm theo khoảng giá</h1>-->
+
+<!--<input type="text" id="one">-->
+<!--<input type="text" id="two">-->
+<!--<button onclick="findPriceBetween()">Search</button><br>-->
+
+<!--<h1>Tìm kiếm sản phẩm theo tên </h1>-->
+<!--<input type="text" id="name">-->
+<!--<button onclick="searchByNameContaining()">SearchByName</button>-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#" onclick="findAll()">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="showTop4PriceMax()">Top 4 sản phẩm </a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-expanded="false">
+                    Category
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="#">Ô tô</a>
+                    <a class="dropdown-item" href="#">Xe máy</a>
+                    <a class="dropdown-item" href="#">Máy bay </a>
+                    <a class="dropdown-item" href="#">Tàu hỏa </a>
+                    <a class="dropdown-item" href="#">Tàu </a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+                  Sắp xếp
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#" onclick="findAllOrderByPrice()">Gía tăng dần</a>
+                    <a class="dropdown-item" href="#">Giarm dần</a>
+                    <div class="dropdown-divider"></div>
+                </div>
+            </li>
+            <li class="nav-item active">
+                <a  data-toggle="modal" data-target="#exampleModal" onclick="showCreateForm()">
+                    Create
+                </a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="name">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="searchByNameContaining()">Search</button>
+        </form>
+    </div>
+</nav>
+<form class="form-inline my-2 my-lg-0 mt-3">
+    <input class="form-control mr-sm-2" type="search" placeholder="Start" aria-label="Search" id="one">
+    <input class="form-control mr-sm-2" type="search" placeholder="End" aria-label="Search" id="two">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit" onclick="findPriceBetween()">Search</button>
+</form>
+
+<div class="container mt-5">
+    <div class="row">
+
+        <div class="col-3" id="category"></div>
+        <div class="col-9">
+            <h3 style="text-align: center">Danh sách sản phẩm </h3>
+            <div id="display"></div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Create Products</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Name</p>
+                <input type="text" id="name1" class="form-control">
+                <p>Price</p>
+                <input type="text" id="price" class="form-control">
+                <p>Category</p>
+                <select id="category_id" class="form-control">
+                    <option></option>
+                </select>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script>
+    function load(){
+        showCategory();
+        findAll();
+    }
     let show = document.getElementById("display");
     let str ="";
+    let category = document.getElementById("category");
 
     function findAll(){
         $.ajax({
@@ -50,23 +154,36 @@
         })
     }
 
-    function showCreateForm(){
+    function showCategory(){
         $.ajax({
-            type: "GET",
-            url: "http://localhost:8081/category",
-            success: function (category) {
-                console.log(category);
-                let form = `<input type="text" id="name" >\n` +
-                    `<input type="text" id="price" >\n` +
-                    `<select id="category">`;
-                for (let i = 0; i < category.length; i++) {
-                    form += `<option value="${category[i].id}">${category[i].name}</option>`
+            type:"GET",
+            url:"http://localhost:8081/category",
+            success :function(categoryList){
+                let str="<h4> Category </h4>";
+                for (let i = 0; i <categoryList.length ; i++) {
+                    str+=`<h4>${categoryList[i].name} </h4>`
                 }
-                form += `</select>` + `<button onclick="save()">Save</button>`;
-                document.getElementById("display").innerHTML = form;
-            },
+            category.innerHTML=str;
+            },error :function(){
+                console.log("Lỗi chương trình")
+            }
         })
-
+    }
+    function showCreateForm(){
+        $("#exampleModal").modal("show");
+        $.ajax({
+            type:"GET",
+            url:"http://localhost:8081/category",
+            success :function(categoryList){
+                let str="<h4> Category </h4>";
+                for (let i = 0; i <categoryList.length ; i++) {
+                    str+=`<option>${categoryList[i].name} </option>`
+                }
+                document.getElementById("category_id").innerHTML=str;
+            },error :function(){
+                console.log("Lỗi chương trình")
+            }
+        })
     }
     function save(){
         let name = document.getElementById("name").value;
@@ -89,6 +206,7 @@
             data: JSON.stringify(pro),
             success:function (){
                 alert("Thêm thành công");
+                findAll();
             },
             error: function (error) {
                 console.log(error)
@@ -109,7 +227,6 @@
         })
     }
     function findPriceBetween(){
-
         let one = document.getElementById("one").value;
         let two = document.getElementById("two").value;
         $.ajax({
@@ -157,8 +274,19 @@
             }
         })
     }
+    function  searchById(id){
+        let name = document.getElementById("name").value;
+        $.ajax({
+            type:"GET",
+            url:"http://localhost:8081/products/findByNameContaining?name="+name,
+            success :function(data){
+                display(data)
+            },error :function(data){
+                console.log(data)
+            }
+        })
 
-
+    }
     function showUpdateForm(id) {
         $.ajax({
             type: "GET",
@@ -182,7 +310,6 @@
             },
         })
     }
-
     function editProduct(id) {
         let name = document.getElementById("name").value;
         let price = document.getElementById("price").value;
@@ -222,6 +349,7 @@
                     url: "http://localhost:8081/products/"+id,
                     success: function () {
                         alert("Xóa thành công ")
+                        findAll();
                     },error:function (error){
                         console.log(error)
                     }
@@ -229,17 +357,40 @@
             },
         })
     }
-
-
     function display(data){
         console.log(data)
+        str = `<table class="table table-striped">
+    <thead>
+    <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Price</th>
+        <th scope="col">Category</th>
+        <th scope="col">Edit</th>
+         <th scope="col">Delete</th>
+    </tr>
+    </thead>
+    <tbody>`
         for(let i=0;i<data.length;i++){
-            str+=`<h1>`+data[i].name + `||`+ data[i].price +
-                ` <button onclick="showUpdateForm(${data[i].id})">Edit</button> `+
-                ` <button onclick="deleteForm(${data[i].id})">Delete</button> ` +`<hr><h1>`;
+            str+=`
+    <tr>
+
+        <td>${data[i].name}</td>
+        <td>${data[i].price}</td>
+        <td>${data[i].category.name}</td>
+
+        <td>\ <button onclick="showUpdateForm(${data[i].id})">Edit</button> \</td>
+        <td>\ <button onclick="deleteForm(${data[i].id})">Delete</button> \</td>
+    </tr>
+    `;
+
         }
+        str += `</tbody>
+</table>`
         show.innerHTML=str;
     }
+
 </script>
+
+
 </body>
 </html>

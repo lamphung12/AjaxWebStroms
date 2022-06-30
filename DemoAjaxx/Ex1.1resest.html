@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css"
+          integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF"
+            crossorigin="anonymous"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</head>
+<body onload="loadData()">
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="#">Navbar</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="modal" data-target="#exampleModal" onclick="showAddForm()">Create</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                               data-toggle="dropdown" aria-expanded="false">
+                                Dropdown
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link disabled">Disabled</a>
+                        </li>
+                    </ul>
+                    <div class="form-inline my-2 my-lg-0">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"
+                               id="nameSearch">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit"
+                                onclick="searchByNameContaining()">Search
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-3">
+            <p id="categoryId1"></p>
+        </div>
+        <div class="col-9">
+            <h3 style="text-align: center"> List product </h3>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
+                    <th scope="col">Image</th>
+                </tr>
+                </thead>
+                <tbody id="list">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add new Product</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addForm">
+                    <label>Name</label>
+                    <input type="text" name="name" class="form-control">
+                    <p id="validateName"></p>
+                    <label>Price</label>
+                    <input type="number" name="price" class="form-control">
+                    <label>Category</label>
+                    <select id="categoryId" name="categoryId" class="form-control">
+                        <option></option>
+                    </select>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"
+                        onclick="save()">Save changes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Product</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <input type="hidden" id="id">
+                    <label>Name</label>
+                    <input type="text" name="name" class="form-control" id="nameEdit">
+                    <label>Price</label>
+                    <input type="number" name="price" class="form-control" id="priceEdit">
+                    <label>Category</label>
+                    <select id="category-id_edit" name="categoryId" class="form-control">
+                    </select>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1"
+                        onclick="update()">Save changes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+findAllCategoryId()
+
+    let tbody = document.getElementById("list");
+    let addForm = document.getElementById("addForm");
+    let editForm = document.getElementById("editForm");
+    let categorySelect = document.getElementById("categoryId");
+    let categorySelectEdit = document.getElementById("category-id_edit");
+    let validate = document.getElementById("validateName");
+
+
+    function searchByNameContaining() {
+        let InputName = document.getElementById("nameSearch").value;
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8081/products/findByNameContaining?name=" + InputName,
+            success: function (data) {
+                loadDataTable(data)
+            }, error: function (data) {
+                console.log(data)
+            }
+        })
+    }
+
+    function showAddForm() {
+        // $('#exampleModal').modal('show');
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8081/category",
+            success: function (list) {
+                let str = "";
+                for (let i = 0; i < list.length; i++) {
+                    console.log(list[i].name)
+                    str += `<option value="${list[i].id}">${list[i].name} </option>`
+                }
+                categorySelect.innerHTML = str;
+            }
+        })
+    }
+
+    function showEditForm(id) {
+        // $("#exampleModal1").modal("show");
+        // let editFormData =new FormData(editForm);
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8081/products/" + id,
+            success: function (data) {
+                console.log(data)
+                document.getElementById('id').value = data.id;
+                document.getElementById('nameEdit').value = data.name;
+
+
+                document.getElementById('priceEdit').value = data.price;
+            }
+        })
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8081/category",
+            success: function (list) {
+                let str = "";
+                for (let i = 0; i < list.length; i++) {
+                    console.log(list[i].name)
+                    str += `<option value="${list[i].id}">${list[i].name} </option>`
+                }
+                categorySelectEdit.innerHTML = str;
+            }
+        })
+    }
+
+    function save() {
+        let formData = new FormData(addForm);
+        let product = {
+            name: formData.get('name'),
+            price: formData.get('price'),
+            category: {
+                id: formData.get('categoryId')
+            }
+        }
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            type: 'POST',
+            url: 'http://localhost:8081/products',
+            data: JSON.stringify(product),
+            success: function () {
+                loadData();
+                // $('#exampleModal').modal('hide');
+            },
+            error: function (error) {
+                console.log(JSON.parse(error.responseText));
+                validate.innerHTML = JSON.parse(error.responseText).name
+            }
+        })
+    }
+
+    function update() {
+        let id = document.getElementById("id").value;
+        let formData = new FormData(editForm);
+        let product = {
+            name: formData.get('name'),
+            price: formData.get('price'),
+            category: {
+                id: formData.get('categoryId')
+            }
+        }
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            type: 'PUT',
+            url: 'http://localhost:8081/products/' + id,
+            data: JSON.stringify(product),
+            success: function () {
+                loadData();
+                $('#exampleModal1').modal('hide');
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        })
+    }
+
+    function loadData() {
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8081/products",
+            success: function (data) {
+                loadDataTable(data);
+            }
+        })
+    }
+    function loadDataTable(data) {
+        let str = "";
+        for (let i = 0; i < data.length; i++) {
+            str += `<tr>
+                        <th scope="row">${i + 1}</th>
+                        <td>${data[i].name}</td>
+                        <td>${data[i].price}</td>
+                        <td>${data[i].category.name}</td>
+                        <td><button class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1"  onclick="showEditForm(${data[i].id} )">Edit</button></td>
+                        <td><button class="btn btn-primary"  onclick="showDeleteForm(${data[i].id} )">Delete</button></td>
+
+                       </tr>`
+        }
+        tbody.innerHTML = str;
+    }
+    function findAllCategoryId() {
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:8081/category",
+            success: function (categories) {
+                console.log(categories)
+                let str = "";
+                str += `<select id="category2" onchange="showByCategoryId()" >
+                        <option value="0">All</option>`;
+                for (let i = 0; i < categories.length; i++) {
+                    str += `<option value="${categories[i].id}">${categories[i].name}</option>`
+                }
+                    str += `</select>`;
+                document.getElementById("categoryId1").innerHTML = str;
+            }
+        })
+    }
+    function showByCategoryId(){
+        let id = document.getElementById("category2").value;
+            $.ajax({
+                type: "GET",
+                url: "http://localhost:8081/products/searchById/" + id,
+                success: function (data) {
+                    console.log(data)
+                    loadDataTable(data)
+                },
+            })
+
+    }
+
+
+function showDeleteForm(id) {
+    if (confirm("Bạn có chắc chắn muốn xoá sản phẩm ko ???")) {
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            type: 'DELETE',
+            url: 'http://localhost:8081/products/'+id,
+            success: function (){
+               loadData()
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        })
+    }
+}
+</script>
+</body>
+</html>
