@@ -41,7 +41,12 @@
                         <li class="nav-item">
                             <a class="nav-link disabled">Disabled</a>
                         </li>
-
+                        <li class="nav-item mt-2 mr-2 "  >
+                            <a  data-toggle="modal" data-target="#exampleModal2" > Register</a>
+                        </li>
+                        <li class="nav-item mt-2"  >
+                            <a  data-toggle="modal" data-target="#exampleModal3" > Login</a>
+                        </li>
                     </ul>
                     <div class="form-inline my-2 my-lg-0">
                         <input class="form-control mr-sm-2" type="search" placeholder="Search Name" aria-label="Search" id="search-name">
@@ -50,6 +55,7 @@
                 </div>
             </nav>
         </div>
+
     </div>
     <div class="row mt-3">
         <div class="col-3">
@@ -79,9 +85,13 @@
                     <th scope="col">Image</th>
                 </tr>
                 </thead>
+
                 <tbody id="list">
                 </tbody>
+
             </table>
+            <div id="content">
+            <div id="search"></divid>
             <div id="pageable"></div>
         </div>
     </div>
@@ -123,7 +133,6 @@
 </div>
 
 <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -157,13 +166,70 @@
         </div>
     </div>
 </div>
+<!--Modal register-->
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Register</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formRegister">
+                    <p>UserName</p>
+                    <input type="text" id="username" name="username" class="form-control">
+                    <p>Password</p>
+                    <input type="text" id="password" name="password" class="form-control">
+                    <p>ConfirmPassword</p>
+                    <input type="text" class="form-control">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal2" onclick="register()">Register</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal login-->
+<div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Login</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formLogin">
+                    <p>UserName</p>
+                    <input type="text" id="user" name="username" placeholder="Username" class="form-control">
+                    <p>Password</p>
+                    <input type="text" id="pass" name="password" placeholder="Password" class="form-control">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal3" onclick="login()">Login</button>
 
+            </div>
+        </div>
+    </div>
+</div>
+
+        <input type="text" >
+        <button onclick="searchUserName()"></button>
 <script>
+    let str="";
+    let accessToken="";
     let tbody = document.getElementById("list")
     let searchName = document.getElementById("search-name")
     let addForm = document.getElementById("addForm")
     let editForm1 = document.getElementById("editForm1")
-    let validateName= document.getElementById("validateName");
+
 
     findAll(0);
     function findAll(number) {
@@ -297,6 +363,203 @@
             }
         })
     }
+
+    function register(){
+        let fomFata = new FormData(document.getElementById('formRegister'));
+        let account = {
+            username: fomFata.get('username'),
+            password:fomFata.get('password'),
+            confirmPassword: fomFata.get('password')
+        }
+        console.log(account)
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            type: "POST",
+            url: 'http://localhost:8000/register',
+            data: JSON.stringify(account),
+            success: function () {
+                alert("Register success");
+                register.reset()
+            }
+            ,
+            error: function (error) {
+                console.log(error);
+                alert(error.responseText);
+            }
+
+        });
+    }
+
+    function login() {
+        let formData = new FormData(document.getElementById('formLogin'));
+        let account = {
+            username: formData.get('username'),
+            password: formData.get('password'),
+        }
+        console.log(account);
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            type: "POST",
+            url: 'http://localhost:8000/login',
+            data: JSON.stringify(account),
+            success: function (data) {
+                console.log("success");
+                accessToken = data.accessToken;
+                console.log(accessToken)
+
+                currentUser(accessToken)
+
+                searchUser(accessToken)
+            }
+            ,
+            error: function (error) {
+                console.log(error);
+                alert(error.responseText);
+            }
+        });
+    }
+
+    function checkLogin(){
+        if(accessToken=""){
+            str+=`
+                <div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Login</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formLogin">
+                    <p>UserName</p>
+                    <input type="text" id="user" name="username" placeholder="Username" class="form-control">
+                    <p>Password</p>
+                    <input type="text" id="pass" name="password" placeholder="Password" class="form-control">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal3" onclick="login()">Login</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+                <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Register</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formRegister">
+                    <p>UserName</p>
+                    <input type="text" id="username" name="username" class="form-control">
+                    <p>Password</p>
+                    <input type="text" id="password" name="password" class="form-control">
+                    <p>ConfirmPassword</p>
+                    <input type="text" class="form-control">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal2" onclick="register()">Register</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+             `
+        }
+        if(accessToken != ""){
+            str = `<div class="nav-item dropdown">
+                <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle mr-4" onclick="logout()">Logout</a>
+
+            </div>`;
+
+        }
+
+    }
+    function logout(){
+        accessToken="";
+        checkLogin();
+    }
+
+    function searchUser(){
+        document.getElementById("search").innerHTML=`       <input type="text" id="idname" >
+        <button onclick="searchUserName()">Search</button>`
+    }
+
+    function searchUserName(){
+        let id= document.getElementById("idname")
+        $.ajax({
+            headers: {
+                Authorization: 'Bearer ' + accessToken
+            },
+            type: "GET",
+            url: "http://localhost:8000/users/"+id,
+            success: function (user) {
+                console.log(user)
+                displayUser(user)
+            },
+            error: function (error) {
+                document.getElementById("content").innerHTML = `<h4>Bạn không có quyền được tìm kiếm ở đây<\h4>`
+                loadData(0)
+                console.log(error)
+            }
+        })
+    }
+
+    function currentUser(){
+        document.getElementById("content").innerHTML = `<button onclick="roleUser()">User</button>`
+    }
+    function roleUser() {
+        $.ajax({
+            headers: {
+                Authorization: 'Bearer ' + accessToken
+            },
+            type: "GET",
+            url: "http://localhost:8000/users",
+            success: function (data) {
+                console.log(data)
+                writeUser(data)
+            },
+            error: function (error) {
+                document.getElementById("content").innerHTML = `<h4>Bạn không có quyền ở đây<\h4>`
+                loadData(0)
+                console.log(error)
+            }
+        })
+    }
+
+    function writeUser(data) {
+        let str = ""
+        for (let i = 0; i < data.length; i++) {
+            str += `<h4>Id : ${data[i].id}, ${data[i].username} - Tôi là User<\h4> `
+        }
+        document.getElementById("content").innerHTML = str
+    }
+
+    function displayUser(user){
+        let str="";
+        for (let i = 0; i <user.length ; i++) {
+            str+=`<h5>Id : ${user[i].id}, ${user[i].username} </h5>`
+        }
+    }
+
+
+
 
 </script>
 
